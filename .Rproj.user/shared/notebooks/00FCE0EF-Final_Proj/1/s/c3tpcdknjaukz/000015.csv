@@ -1,0 +1,1 @@
+"0","plot(mlb$playoffs, mlb$EV, xlab = ""Made Playoffs"", ylab = ""Average Exit Velocity"") "

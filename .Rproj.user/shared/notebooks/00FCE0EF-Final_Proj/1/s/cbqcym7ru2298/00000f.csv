@@ -1,0 +1,4 @@
+"0","#bind all years"
+"0","mlb <- rbind(data_2015,data_2016,data_2017,data_2018,data_2019,data_2020,"
+"0","             data_2021,data_2022,data_2023,data_2024)"
+"0",""

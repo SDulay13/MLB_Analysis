@@ -1,0 +1,32 @@
+{
+    "id": "ECB3D6A9",
+    "path": "/cloud/project/Final_Proj.Rmd",
+    "project_path": "Final_Proj.Rmd",
+    "type": "r_markdown",
+    "hash": "1918816733",
+    "contents": "",
+    "dirty": true,
+    "created": 1734794981647.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "1206,62",
+        "scrollLine": "1189",
+        "last_setup_crc32": "6d702cc1bb338d19",
+        "rmdVisualMode": "false",
+        "rmdVisualCollapsedChunks": "",
+        "rmdVisualModeLocation": "73:0",
+        "rmdVisualWrapConfigured": "true",
+        "docOutlineVisible": "1"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1734923387,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1734923387456,
+    "read_only": false,
+    "read_only_alternatives": []
+}

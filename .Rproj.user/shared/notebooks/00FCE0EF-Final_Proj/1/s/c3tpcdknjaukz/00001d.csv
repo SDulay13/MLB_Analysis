@@ -1,0 +1,2 @@
+"0",""
+"0","plot(mlb$playoffs, mlb$HR_percentage, xlab = ""Made Playoffs"", ylab = ""Home Run %"") "

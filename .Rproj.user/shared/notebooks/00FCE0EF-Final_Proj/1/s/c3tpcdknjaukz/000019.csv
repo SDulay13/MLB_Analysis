@@ -1,0 +1,3 @@
+"0",""
+"0","colnames(mlb)[108] <- ""BB_bat"""
+"0","plot(mlb$playoffs, mlb$BB_bat, xlab = ""Made Playoffs"", ylab = ""Bases on Balls/Walks %"")"

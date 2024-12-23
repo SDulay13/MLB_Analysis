@@ -1,0 +1,1 @@
+"0","plot(mlb$playoffs, mlb$ERA, xlab = ""Made Playoffs"", ylab = ""ERA"")"

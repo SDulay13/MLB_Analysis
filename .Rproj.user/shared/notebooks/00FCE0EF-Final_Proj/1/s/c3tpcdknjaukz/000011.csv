@@ -1,0 +1,1 @@
+"0","plot(mlb$playoffs, mlb$PAge, xlab = ""Made Playoffs"", ylab = ""Average Pitcher Age"")"

@@ -1,0 +1,1 @@
+"0","plot(mlb$playoffs, mlb$RS., xlab = ""Made Playoffs"", ylab = ""RS%"")"

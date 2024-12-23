@@ -1,0 +1,5 @@
+"0","mlb$RS. <- as.numeric(gsub(""%"", """", mlb$RS.))"
+"0","mlb$BB. <- as.numeric(gsub(""%"", """", mlb$BB.))"
+"0","colnames(mlb)[104] <- ""HR_bat"""
+"0","mlb$HR_percentage <- mlb$HR_bat / mlb$AB"
+"0","mlb$SB. <- as.numeric(gsub(""%"", """", mlb$SB.))"

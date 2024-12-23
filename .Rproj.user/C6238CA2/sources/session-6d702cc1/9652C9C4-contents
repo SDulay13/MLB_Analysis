@@ -1,0 +1,648 @@
+---
+title: "Stat139_final_project"
+output: pdf_document
+date: "2024-11-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Description of Data:
+
+The data includes a variety of hitting and pitching metrics that come in cumulative and average forms. We may later end up normalizing all the data for easy interpretability on what impacts a team's success the most. We have panel data from a ten year period where the entities are the teams. This will allow us to control for fixed effects across time.
+
+Description of Source:
+
+Baseball reference is a open database that actively updates metrics and has easy to export data sorted by year. Here we load in csv's from different categories (Standard Pitching, Advanced Pitching, Standard Batting, Advanced Batting, and Fielding)
+
+```{r, 2015, echo=FALSE}
+data1 <- read.csv("2015/2015_Stdpitching.csv")
+data2 <- read.csv("2015/2015advpitching.csv",skip = 1)
+data3 <- read.csv("2015/advanced_batting.csv",skip=1)
+data4 <- read.csv("2015/fielding2015.csv")
+data5 <- read.csv("2015/Standard_Batting_2015.csv")
+#install.packages("plyr")
+library(plyr)
+data_2015 <- join_all(list(data1,data2,data3,data4,data5), by ="Tm", type = 'left')
+data_2015$season <- rep(2015)
+data_2015 <- data_2015[1:30,]
+```
+
+```{r, 2016, echo=FALSE}
+data1.2 <- read.csv("2016/2016_Stdpitching.csv")
+data2.2 <- read.csv("2016/2016_advpitching.csv",skip = 1)
+data3.2 <- read.csv("2016/advanced_batting.csv",skip=1)
+data4.2 <- read.csv("2016/fielding2016.csv")
+data5.2 <- read.csv("2016/Standard_Batting_2016.csv")
+
+data_2016 <- join_all(list(data1.2,data2.2,data3.2,data4.2,data5.2), by ="Tm", type = 'left')
+data_2016$season <- rep(2016)
+data_2016 <- data_2016[1:30,]
+```
+
+```{r, 2017, echo=FALSE}
+data1.3 <- read.csv("2017/2017_Stdpitching.csv")
+data2.3 <- read.csv("2017/2017_advpitching.csv",skip = 1)
+data3.3 <- read.csv("2017/advanced_batting.csv",skip=1)
+data4.3 <- read.csv("2017/fielding2017.csv")
+data5.3 <- read.csv("2017/Standard_Batting_2017.csv")
+
+data_2017 <- join_all(list(data1.3,data2.3,data3.3,data4.3,data5.3), by ="Tm", type = 'left')
+data_2017$season <- rep(2017)
+data_2017 <- data_2017[1:30,]
+```
+
+```{r, 2018, echo=FALSE}
+data1.4 <- read.csv("2018/2018_Stdpitching.csv")
+data2.4 <- read.csv("2018/2018_advpitching.csv",skip = 1)
+data3.4 <- read.csv("2018/advanced_batting.csv", skip = 1)
+data4.4 <- read.csv("2018/fielding2018.csv")
+data5.4 <- read.csv("2018/standard_batting_2018.csv")
+
+data_2018 <- join_all(list(data1.4,data2.4,data3.4,data4.4,data5.4), by ="Tm", type = 'left')
+data_2018$season <- rep(2018)
+data_2018 <- data_2018[1:30,]
+```
+
+```{r, 2019, echo=FALSE}
+data1.5 <- read.csv("2019/2019_Stdpitching.xls - 2019_Stdpitching.xls.csv")
+data2.5 <- read.csv("2019/2019_advpitching.xls - 2019_advpitching.xls.csv",skip = 1)
+data3.5 <- read.csv("2019/advanced_batting.xls - advanced_batting.xls.csv", skip =1)
+data4.5 <- read.csv("2019/fielding2019.xlsx - Worksheet.csv")
+data5.5 <- read.csv("2019/standard_batting_2019.xls - standard_batting_2019.xls.csv")
+
+data_2019 <- join_all(list(data1.5,data2.5,data3.5,data4.5,data5.5), by ="Tm", type = 'left')
+data_2019$season <- rep(2019)
+data_2019 <- data_2019[1:30,]
+```
+
+```{r, 2020, echo=FALSE}
+data1.6 <- read.csv("2020/2020_Stdpitching.xls - 2020_Stdpitching.xls.csv")
+data2.6 <- read.csv("2020/2020_advpitching.xls - 2020_advpitching.xls.csv",skip = 1)
+data3.6 <- read.csv("2020/advanced_batting.xls - advanced_batting.xls.csv", skip =1)
+data4.6 <- read.csv("2020/fielding2020.xlsx - Worksheet.csv")
+data5.6 <- read.csv("2020/standard_batting_2020.xls - standard_batting_2020.xls.csv")
+
+data_2020 <- join_all(list(data1.6,data2.6,data3.6,data4.6,data5.6), by ="Tm", type = 'left')
+data_2020$season <- rep(2020)
+data_2020 <- data_2020[1:30,]
+```
+
+```{r, 2021, echo=FALSE}
+data1.7 <- read.csv("2021/2021_Stdpitching.xls - 2021_Stdpitching.xls.csv")
+data2.7 <- read.csv("2021/2015_Stdpitching,2015advpitching,advanced_batting.csv",skip = 1)
+data3.7 <- read.csv("2021/advanced_batting.xls - advanced_batting.xls.csv", skip =1)
+data4.7 <- read.csv("2021/fielding2021.xlsx - Worksheet.csv")
+data5.7 <- read.csv("2021/standard_batting_2021.xls - standard_batting_2021.xls.csv")
+
+data_2021 <- join_all(list(data1.7,data2.7,data3.7,data4.7,data5.7), by ="Tm", type = 'left')
+data_2021$season <- rep(2021)
+data_2021 <- data_2021[1:30,]
+```
+
+```{r, 2022, echo=FALSE}
+data1.8 <- read.csv("2022/2022_Stdpitching.xls - 2022_Stdpitching.xls.csv")
+data2.8 <- read.csv("2022/2022_advpitching.xls - 2022_advpitching.xls.csv",skip = 1)
+data3.8 <- read.csv("2022/advanced_batting.xls - advanced_batting.xls.xls.csv", skip =1)
+data4.8 <- read.csv("2022/fielding2022.xlsx - Worksheet.csv")
+data5.8 <- read.csv("2022/standard_batting_2022.xls - standard_batting_2022.xls.csv")
+
+data_2022 <- join_all(list(data1.8,data2.8,data3.8,data4.8,data5.8), by ="Tm", type = 'left')
+data_2022$season <- rep(2022)
+data_2022 <- data_2022[1:30,]
+```
+
+```{r, 2023, echo=FALSE}
+data1.9 <- read.csv("2023/2023_Stdpitching.xls - 2023_Stdpitching.xls.csv")
+data2.9 <- read.csv("2023/2023_advpitching.xls - 2023_advpitching.xls.csv",skip = 1)
+data3.9 <- read.csv("2023/advanced_batting.xls - advanced_batting.xls.csv", skip =1)
+data4.9 <- read.csv("2023/fielding2023.xlsx - Worksheet.csv")
+data5.9 <- read.csv("2023/standard_batting_2023.xls.csv")
+
+data_2023 <- join_all(list(data1.9,data2.9,data3.9,data4.9,data5.9), by ="Tm", type = 'left')
+data_2023$season <- rep(2023)
+data_2023 <- data_2023[1:30,]
+```
+
+```{r, 2024, echo=FALSE}
+data1.10 <- read.csv("2024/2024_Stdpitching.xls.csv")
+data2.10 <- read.csv("2024/2024_advpitching.xls.csv",skip = 1)
+data3.10 <- read.csv("2024/advanced_batting.xls.csv", skip =1)
+data4.10 <- read.csv("2024/fielding2024 (1).csv")
+data5.10 <- read.csv("2024/standard_batting_2024.xls.csv")
+
+data_2024 <- join_all(list(data1.10,data2.10,data3.10,data4.10,data5.10), by ="Tm", type = 'left')
+data_2024$season <- rep(2024)
+data_2024 <- data_2024[1:30,]
+```
+
+```{r}
+#bind all years together
+mlb <- rbind(data_2015,data_2016,data_2017,data_2018,data_2019,data_2020,
+             data_2021,data_2022,data_2023,data_2024)
+
+```
+
+EDA and Visuals:
+
+Some of the variables we're looking at are:
+
+-   SB: Stolen Bases Percentage
+
+-   PAge: Pitcher Avg Age
+
+-   BatAge: Batter Avg Age
+
+-   EV: Average Exit Velocity
+
+-   ERA: Earned Run Average
+
+-   BB: Bases on Balls
+
+-   OPS: On-base percentage plus slugging
+
+-   HR: Home Run Percentage
+
+-   RS: Runner Support Percentage (Percentage of Baserunners that Eventually Score)
+
+-   E: Errors Committed
+
+-   RDRS: Defensive Runs Saved
+
+All of these are numerical and have 300 observations in our dataset (with no missing data). The means all look accurate!
+
+We can use the SD / IQR spread measurements to see how varied the skill is within the league.
+
+```{r}
+mlb$RS. <- as.numeric(gsub("%", "", mlb$RS.))
+mlb$BB. <- as.numeric(gsub("%", "", mlb$BB.))
+colnames(mlb)[104] <- "HR_bat"
+mlb$HR_percentage <- mlb$HR_bat/mlb$AB
+mlb$SB. <- as.numeric(gsub("%", "", mlb$SB.))
+```
+
+```{r}
+columns <- c("SB", "PAge", "BatAge", "EV", "ERA", "BB.", "OPS", "HR_percentage", "RS.", 
+             "E", "Rdrs")
+
+for (col in columns) {
+  cat("Statistics for column:", col, "\n")
+  column_data <- mlb[[col]]
+  
+  cat("- Number of non-missing observations:", sum(!is.na(column_data)), "\n")
+  cat("- Number of missing observations:", sum(is.na(column_data)), "\n")
+  cat("- Mean:", mean(column_data, na.rm = TRUE), "\n")
+  cat("- Median:", median(column_data, na.rm = TRUE), "\n")
+  cat("- Standard Deviation:", sd(column_data, na.rm = TRUE), "\n")
+  cat("- IQR:", IQR(column_data, na.rm = TRUE), "\n\n")
+}
+```
+
+```{r}
+#Coding binary variable for whether or not team reached the playoffs
+# potential to add teams that just missed playoffs in original years in order to train model for current playoff structure
+
+mlb$playoffs <- ifelse(
+ ( (mlb$Tm %in% c("Kansas City Royals", "Toronto Blue Jays", "New York Yankees", "Texas Rangers", "Houston Astros", "St. Louis Cardinals", "Los Angeles Dodgers", "New York Mets", "Pittsburgh Pirates", "Chicago Clubs") & mlb$season == 2015)|
+  (mlb$Tm %in% c("Texas Rangers", "Cleveland Indians","Boston Red Sox", "Toronto Blue Jays", "Baltimore Orioles", "Chicago Cubs","Washington Nationals", "Los Angeles Dodgers", "New York Mets", "San Francisco Giants") & mlb$season ==2016)|
+    (mlb$Tm %in% c("Cleveland Indians","Boston Red Sox","Houston Astros","New York Yankees","Minnesota Twins","Chicago Cubs","Washington Nationals", "Los Angeles Dodgers","Arizona Diamondbacks","Colorado Rockies") & mlb$season == 2017)|
+    (mlb$Tm %in% c("Cleveland Indians","Boston Red Sox","Houston Astros","New York Yankees","Oakland Athletics", "Milwaukee Brewers", "Los Angeles Dodgers", "Atlanta Braves", "Colorado Rockies","Chicago Cubs") & mlb$season == 2018)|
+    (mlb$Tm %in% c("Houston Astros","New York Yankees","Minnesota Twins","Oakland Athletics","Tampa Bay Rays","Los Angeles Dodgers", "Atlanta Braves","St. Louis Cardinals","Washington Nationals","Milwaukee Brewers") & mlb$season == 2019)|
+    (mlb$Tm %in% c("Oakland Athletics","Tampa Bay Rays","Minnesota Twins","Cleveland Indians","Houston Astros","New York Yankees","Chicago White Sox","Toronto Blue Jays","Los Angeles Dodgers", "Atlanta Braves","Chicago Cubs","San Diego Padres","St. Louis Cardinals","Miami Marlins","Cincinnati Reds","Milwaukee Brewers") & mlb$season == 2020)|
+    (mlb$Tm %in% c("Tampa Bay Rays","New York Yankees","Chicago White Sox","Houston Astros","Boston Red Sox","Milwaukee Brewers","Los Angeles Dodgers", "Atlanta Braves","San Francisco Giants","St. Louis Cardinals") & mlb$season == 2021)|
+    (mlb$Tm %in% c("New York Yankees","Houston Astros", "Cleveland Guardians","Toronto Blue Jays","Seattle Mariners","Tampa Bay Rays","Los Angeles Dodgers", "Atlanta Braves","San Diego Padres","St. Louis Cardinals", "New York Mets","Philadelphia Phillies") & mlb$season == 2022)|
+    (mlb$Tm %in% c("Baltimore Orioles","Toronto Blue Jays","Texas Rangers","Tampa Bay Rays","Houston Astros","Minnesota Twins","Milwaukee Brewers","Los Angeles Dodgers", "Atlanta Braves","Philadelphia Phillies","Miami Marlins","Arizona Diamondbacks") & mlb$season == 2023)|
+    (mlb$Tm %in% c("New York Yankees","Houston Astros", "Cleveland Guardians","Baltimore Orioles","Kansas City Royals","Detroit Tigers","Los Angeles Dodgers", "Atlanta Braves","Philadelphia Phillies","Milwaukee Brewers","New York Mets","San Diego Padres") & mlb$season == 2024))
+    ,1,0)
+mlb$playoffs <- as.factor(mlb$playoffs)
+```
+
+Here is a bar chart depicting how the playoff format has changed with special seasons like covid followed by an expansion two years later.
+
+```{r, fig.width=5, fig.height=4}
+library(ggplot2)
+playoff_teams <- c(10, 10, 10, 10, 10, 16, 10, 12, 12, 12)
+teams <- c(30,30,30,30,30,30,30,30,30,30)
+
+playoff_percent <- (playoff_teams / teams) * 100
+
+seasons <- 2015:2024
+
+playoff_percent <- data.frame(
+  season = seasons,
+  playoff_percent = playoff_percent
+)
+
+# Plot the bar graph
+ggplot(playoff_percent, aes(x = factor(season), y = playoff_percent)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(
+    title = "Percentage of Teams Making Playoffs (2015-2024)",
+    x = "Season",
+    y = "Playoff Percentage"
+  ) 
+```
+
+Here are visualizations comparing playoff and non-playoff teams across all predictors.
+
+```{r, fig.width=5, fig.height=4}
+plot(mlb$playoffs, mlb$SB., xlab= "Made Playoffs", ylab= "Stolen Base %") 
+plot(mlb$playoffs, mlb$PAge, xlab= "Made Playoffs", ylab= "Average Pitcher Age")
+plot(mlb$playoffs, mlb$BatAge, xlab= "Made Playoffs", ylab= "Average Batter Age")
+plot(mlb$playoffs, mlb$EV, xlab= "Made Playoffs", ylab= "Average Exit Velocity") #FLAG TO CHECK
+plot(mlb$playoffs, mlb$ERA, xlab= "Made Playoffs", ylab= "ERA")
+
+colnames(mlb)[108] <- "BB_bat"
+plot(mlb$playoffs, mlb$BB_bat, xlab= "Made Playoffs", ylab= "Bases on Balls/Walks %")
+
+colnames(mlb)[113] <- "OPS_bat"
+plot(mlb$playoffs, mlb$OPS_bat, xlab= "Made Playoffs", ylab= "On-base Plus Slugging")
+
+plot(mlb$playoffs, mlb$HR_percentage, xlab= "Made Playoffs", ylab= "Home Run %") 
+plot(mlb$playoffs, mlb$RS., xlab= "Made Playoffs", ylab= "RS%")
+plot(mlb$playoffs, mlb$E, xlab= "Made Playoffs", ylab= "Errors Committed")
+plot(mlb$playoffs, mlb$Rdrs, xlab= "Made Playoffs", ylab= "Defensive Runs Saved")
+
+#Flagged to check wheter the stat measures team batting or team pitching
+
+```
+
+```{r}
+write.csv(mlb, "mlb_edits.csv", row.names = FALSE)
+```
+
+Part 1: Hypothesis Testing
+
+In this section, we examine the impact of Intentional Bases on Balls (IBBs) on a team's Win-Loss percentage. This inquiry stems from the strategic decision by pitchers to intentionally walk strong power hitters to reduce the risk of conceding home runs. Our objective is to determine whether this strategy negatively affects a team's Win-Loss percentage by potentially disrupting offensive output. Conversely, it is also plausible that teams with high IBB rates are able to effectively capitalize on these intentional walks, turning them into an advantage. Moreover, having high IBB is likely positively correlated with Home Runs.
+
+We opted to measure IBB as a proportion of IBB to At Bats ((IBB/AB)\*100) to normalize across teams and control for differences between teams in plate appearances as teams with more at bats are more likely to have high IBB. IBB as a proportion to at-bats thus displays intentional walks as a function of offensive opportunities.
+
+Additionally, we incorporated team and season fixed effects to control for factors that vary across teams and seasons. These include season-specific dynamics such as rule changes or shortened seasons (e.g. 2020 with COVID), as well as team-level factors like budget constraints or offensive strength, ensuring that our analysis isolates the relationship between IBB and team performance.
+
+In our second model, we have introduced On-Base Percentage (OBP) (measured as a percentage out of 100) and Runs Allowed per Game (RA/G) as control variables. Including OBP allows us to account for a team’s offensive strength, as teams with higher OBP are generally better at creating scoring opportunities. Additionally, OBP captures the impact of strong power hitters, who typically have higher OBP values and are more likely to be intentionally walked by the opposition. Omitting OBP could overstate the effect of IBB on team performance by conflating the benefits of a strong offense with the strategic use of intentional walks.
+
+We also include RA/G to control for a team’s defensive performance, which is a crucial determinant of overall success. RA/G reflects the ability of a team’s pitching staff and defense to limit opposing runs, providing a more balanced assessment of the factors influencing Win-Loss percentage. Together, these controls ensure our model isolates the effect of IBB on team performance while accounting for key offensive and defensive dynamics.
+
+Hypothesis Models: Model 1: $$W/L_{ijt} = \beta_0 + \beta_1IBB_{ijt} + \gamma_{ijt} + \delta_{ijt}$$ Model 2: $$W/L_{ijt} = \beta_0 + \beta_1IBB_{ijt} + \beta_2OBP_{ijt} + \beta_3RA/G_{ijt} + \gamma_{ijt} + \delta_{ijt}$$
+
+$$H_0 : \beta_1 = 0 \hspace{1cm} H_1 : \beta_1 \neq0$$
+
+```{r, fig.width=5, fig.height=4}
+colnames(mlb)[120] <- "IBB_bat"
+colnames(mlb)[99] <- "AB_bat"
+colnames(mlb)[100] <- "Runs_bat"
+
+mlb$IBB_prop <- (mlb$IBB_bat/mlb$AB_bat)*100
+mlb$OBP_prop <- mlb$OBP*100
+
+IBB <- lm(W.L. ~ IBB_prop +factor(season) + factor(Tm), data =mlb)
+summary(IBB) 
+#test assumptions
+plot(IBB, 1)
+plot(IBB,2)
+plot(IBB,3)
+shapiro.test(residuals(IBB))
+
+#controlling for OBP and defense
+IBB_control <- lm(W.L. ~ IBB_prop + OBP_prop + RA.G + factor(season) + factor(Tm), data = mlb)
+summary(IBB_control) 
+#test assumptions
+plot(IBB_control, 1)
+plot(IBB_control,2)
+plot(IBB_control,3)
+shapiro.test(residuals(IBB_control))
+
+#interaction
+IBB_int <- lm(W.L. ~ IBB_prop + OBP_prop + RA.G + IBB_prop*OBP_prop + factor(season) + factor(Tm), data = mlb)
+summary(IBB_int) 
+```
+
+Interpretations: Model 1: $$\hat{\beta_0} = 0.404 \hspace{1cm} \hat{\beta_1} = 0.112$$ The coefficient for our variable of interest, IBB, is 0.112 with a p-value of 0.00016 which is significant at our set alpha of 0.05. This tells us that on average, an increase in IBB/AB by one percentage point is associated with a 0.112 increase in Win-Loss percentage We can reject the null that intentional walks has no effect on win-loss percentage. This proves that a team being intentionally walked does not have a negative impact on win-loss percantage and likely does not disrupt offensive flow. It instead appears to have a positive impact on win-loss percentage as it is an indicator of having strong hitters who contribute more offensive opportunities.
+
+Model 2: $$\hat{\beta_0} = 0.062 \hspace{1cm} \hat{\beta_1} = -0.015 \hspace{1cm} \hat{\beta_2} = 0.029 \hspace{1cm} \hat{\beta_3} = -0.108$$ After controlling for OBP and RA/G, our coefficient of interest becomes negative and insignificant at the 95% level with a p-value of 0.29. The coefficients for OBP and RA/G are both significant. This suggests that the effects of intentional walks on Win-Loss proportion are mediated or controlled by OBP and RA/G. That is, having a higher proportion of IBB is associated with having higher offensive strength, explained by OBP as pitchers fear giving up runs to power hitters with high OBP. Therefore, we cannot say that IBB has a direct effect on team performance and is more of a refection of a team's offensive strength rather than a direct driver of performance through interrupted offensive flow.
+
+These results can be reconciled with the fact that the effect of IBB is likely highly context dependent. How it benefits or hurts a team relies heavily on game state, lineup, and situations with high leverage where the team can capitalize. For example, an intentional walk has a very different effect when the batting team has 2 outs and empty bases in the 1st inning compared to having no outs, bases loaded in the 9th inning with a strong hitter in the hole. Therefore, because the effects of IBB are highly context dependent, it's possible that it plays a much more situational role and has less impact on overall season results and has more in-game impact. Additionally, IBB can be more reflective of opponent strategy and defensive quality rather than team performance.
+
+Part 2: Discussion on Playoff format change
+
+The MLB expanded their postseason from 10 to 12 teams in 2022. This rule change is not only exciting for fans as their teams should be in the hunt for a playoff spot each season, but the change should be welcomed by statisticians. The exogenous rule change provides a setting for a quasi-random study where the performance of the two additional teams that now make the playoffs is studied. This will allow inference on whether there are systematic differences between what it takes to win to get into the playoffs and the World Series. Over the past three seasons, fans have had the luxury to watch more frequent upsets. While there are different theories on why lower-seeded teams outperform their opponents in the playoffs, we will set up a statistical framework for testing the unexpected high quality play of the 11th and 12th seeds.
+
+Before we dive into the statistical framework, we will clarify how the playoffs work now versus how they did in the Wild Card era which was the previous format. From 2012-2019 and 2021, the playoffs consisted of ten teams. There are six division winners split across the American and National Leagues. Then, each league has two Wild Card teams that did not win their division but held the best records in their league out of non-division winning teams. Each league’s two Wild Card teams played each other in a win-or-go-home match. The winner would go on to play in the division series against the division winner with the best record and the other two division winners would play each other. The two teams to win the Division Series would go on to play in the League Championship Series. The winner of each league’s championship would meet in the World Series. The Division Series was a best-of-five with the exception of 2012 which was a best-of-three. The League Championship Series and World Series were both best-of-sevens.
+
+The most recent playoffs of the 10-team format
+
+![The most recent playoffs of the 10-team format via MLB.com](/cloud/project/Screenshot%202024-12-20%20094054.jpg) Now the stakes are different. An additional team makes the playoffs in each league where the division winner with the lowest record now participates against the lowest Wild Card team in a best-of-three and the top-two Wild Card teams play each other in a 3-game series as well. The top two division winners maintain their guaranteed spot in the Division Series. The other rounds remain the same. For a visual of the new format refer to the image below.
+
+![The most recent playoffs of the 10-team format via MLB.com](/cloud/project/Screenshot%202024-12-20%20094727.jpg)
+
+In the previous format which consists of nine seasons, and three teams made the World Series, two ended up winning the World Series as well. In 2014, the Kansas City Royals and San Francisco Giants were both Wild Card teams that met in the World Series with the Giants winning. In 2019, the Washington Nationals won the World Series as a Wild Card. In the new format we have already seen Wild Card teams make or even win the World Series in just three seasons. In the first year of this format, 2022, the Phillies were not only a Wild Card team, but the lowest ranked team in the National League. Therefore, without this change, they would have not made the playoffs let alone make it to the World Series. The following season saw two Wild Card teams clash in the World Series as 2023 one of which was the lowest seed in the National League as the Philadelphia Phillies were the year prior. This team is the Arizona Diamondbacks which were eliminated by the 5th seed in the American League, the Texas Rangers. So in three seasons, we have seen three out of the six teams to make a World Series be a Wild Card team, two of which were the 6th seeds that would not make it in the prior format. With the miraculous runs witnessed in two of the past three seasons, it is reasonable to expect more which leads to the question of why are teams that performed better all season losing to a team that would have not even made the playoffs? For the 6th seed to advance to the World Series, they must beat the division winners with the best and worst record with the former being heavy favorites usually. The Phillies and Diamondbacks beat division rivals in the National League Division Series after taking down the NL Central winner in the Wild Card round.
+
+This happened two times in the first three seasons under this format and creates a setting to study how to build a team that can make the playoffs and rise above expectations and consistently beat the best of the best. Since the sample size is quite small, we will not perform the analyses. However, in a couple of seasons, the following framework should apply. We can use a linear model with two predictors. The first will be an indicator variable for whether or not the season in which the ith team made the playoffs was in the prior or current format. The data will exclude 2020 which took on a different format because of Covid-19. The indicator $Post_i$ takes on a value of 1 for the playoff teams in the 2022 playoffs and onward. The data collection can continue until a different format is taken on or we have sufficient data. The indicator takes on a value of 0 for playoff teams in 2012-2019 and 2021.
+
+The second predictor will be an indicator called $SixSeed_i$ where the team in each league to make the playoffs with the lowest record takes on a value of 1 and any other playoff team has a value of 0. The predictor will consider the hypothetical teams to make it that played under the prior format as if they played under the current format. Further an interaction term will be included between the two indicator variables. Therefore our model is the following:
+
+$Y_i = \beta_0 + \beta_1Post_i + \beta_2SixSeed_i+\beta_3(Post_iXSixSeed_i)$
+
+$E(Y_i|Post_i=0,SixSeed_i=0) = \beta_0$ $E(Y_i|Post_i=1,SixSeed_i=0) = \beta_0+\beta_1$ $E(Y_i|Post_i=0,SixSeed_i=1) = \beta_0+\beta_2$ $E(Y_i|Post_i=1,SixSeed_i=1) = \beta_0+\beta_1+\beta_2+\beta_3$
+
+For instance a team with a 1st to 5th seed in the prior format will have a predicted outcome of solely the intercept since both predictors are 0. A 1st to 5th seed in the current format will have a predicted outcome of the inercept + $\beta_1$. The other conditional expectations are included above for all scenarios.
+
+The outcome of interest for us is the number of playoff games won given their seed and format. Other outcomes could be World Series won, series wins, or World Series appearances. Since their seed will relate to factors such as the team performance within the regular season we do not need to consider predictors other than what format the teams played under. We figured that it would be ideal to start with an outcome like wins because it will give us information on precisely how far we expect a team to make it. If a team wins less than two games as a Wild Card, they will not advance to the divison series.
+
+Part 3: Prediction for 2025 Using common baseball stats or regularization?
+
+Baseline Model:
+
+We will use a probit model to predict accurately which teams will make the playoffs based on select predictors. The way in which we will test our model for accuracy are the cross validation techniques learned in class such as k-fold cross validation and lasso. We will start using a baseline model off of substantive knowledge, but we will evaluate its success to generalized cross validation techniques.
+
+Our first model will include a mixture of predictors that capture pitcher and hitter success from standard and advanced metrics. Since we have thirty observations each year for ten years, our model will have to be quite small to avoid overfitting.
+
+Let $Playoff_i$ be an indicator variable that takes one if the ith team makes the playoffs and 0 otherwise. Whether or not a team makes the playoffs is an amazing proxy for team success since it is a goal that all mlb teams strive to achieve in order to have a chance to win the World Series. One challenge to consider is that the playoffs expanded within our study period which will make constraining the number of teams to make the playoffs a challenge. An alternative would be a model that predicts how many wins each team gets, but this faces similar constraint problems since we are not individually simulating games where we can fit the model to have one team win and the other lose.
+
+Our initial model is
+
+$$Pr(Playoff_i=1) = \beta_0 + \beta_1 SB + \beta_2 PAge + \beta_3 BatAge + \beta_4 EV + \beta_5 ERA + \beta_6 BB + \beta_7 OPS + \beta_8 HR + \beta_9 RS + \beta_{10} E + \beta_{11} RDRS$$
+
+Hypothesis of Interest:
+
+Our hypothesis will be that a team's ability to makes the playoffs can be predicted accurately with a few select metrics that perhaps are not the conventionally cited ideas agreed upon by baseball fans and analysts. We can conduct formal hypothesis tests on the significance of different coefficients, but the main goal is predictive accuracy, so our model will change often based on machine learning techniques due to the volume of predictors available. Our first model will be based on well-known metrics that are known to be associated with winning, but may not be as important as they are made out to be. This model will rely on well-known stats often attributed to team success such as Homeruns, On-Base Percentage, and Strikeouts as well as some advanced metrics. We will compare our preliminary model based on substantive knowledge to our final model to evaluate whether the metrics often considered key to winning are as important as they appear or if there are underlying predictors that are better indicators of winning. We expect that there are more underlying metrics that explain winning more accurately than the conventional ones used.
+
+Analysis: First let's fit a linear regression model solely based on our substantive knowledge. Since our EDA comparing playoff and non-playoff teams on each predictor in our substantive model shows systemic differences in how these types of teams play. We can fit the model.
+
+```{r}
+normalized_mlb <- mlb
+predictors <- c("SB", "PAge", "BatAge", "EV", "ERA", "BB", "OPS", "HR", "RS.", "E", "Rdrs")
+normalized_mlb[predictors] <- scale(mlb[predictors])
+
+summary(logit<-glm(playoffs~SB + PAge + BatAge + EV + ERA + BB + OPS + HR + RS. + E + Rdrs,
+                    data=normalized_mlb,family="binomial"))$coefficients
+```
+
+Our ultimate goal is to evaluate how well we can predict using only a few predictors from substantive knowledge and from a regularization method like ridge. To compare the two, we will need to calculate the root mean square prediction error. Before fitting the ridge model, we will calculate the MSPE of the substantive model. We will also consider another technique: principal component analysis. This method helps to maximize how well we capture the variability in the data with a limited number of predictors. It offers an alternative model with only a few predictors that will likely outperform a model based on substantive knowledge. Once we finish evaluating the models based on RMSPE, we can choose which model we expect to be most helpful for the upcoming season. To see how well our model performs, we can use projections for the upcoming year for each team as our predictors to see how aligned our model is with other predictions.
+
+```{r}
+library(dplyr)
+k <- 10
+set.seed(139)
+
+mlb_logit <- normalized_mlb %>%
+  select("SB", "PAge", "BatAge", "EV", "ERA", "BB", "OPS", "HR", "RS.", "E", "Rdrs", "playoffs")
+mlb_logit$playoffs <- as.numeric(as.character(mlb_logit$playoffs))
+mlb_logit$fold <- sample(rep(1:k, length.out = nrow(mlb_logit)))
+
+mspe_vals_logit <- numeric(k)
+
+for (i in 1:k) {
+  train_data_logit <- mlb_logit %>% filter(fold != 1)
+  test_data_logit <- mlb_logit %>% filter(fold == 1)
+  logit_base <-glm(playoffs~SB + PAge + BatAge + EV + ERA + BB + OPS + HR + RS. + E + Rdrs,
+                    data=train_data_logit,family="binomial")
+  test_data_logit$predicted_prob <- predict(logit_base, newdata = test_data_logit, type = "response")
+  test_data_logit$mspe <- (test_data_logit$predicted_prob - test_data_logit$playoffs)^2
+  mspe_vals_logit[i] <- mean(test_data_logit$mspe)
+}
+logit_mspe <- sqrt(mean(mspe_vals_logit))
+cat("Logit Regression MSPE:", logit_mspe, "\n")
+```
+
+On average this model is 30% off, so we expect that our predictions can be more accurate with machine learning techniques like regularization.
+
+RIDGE/LASSO
+
+We fit four models in the regularization section. The first two were Ridge and LASSO models that included all of the numeric variables in the data. The last two included 45 variables in the data, after filtering out repetitive variables and non-numeric variables.
+
+Of our regularization efforts, the best model (with LASSO on all of the numeric variables) decrease MPSE from 0.301 to 0.290. This increase in prediction accuracy was a lot lower than we expected, especially since we added many new predictors into this model. The result, for us, was that the simplicity of the original model outweighed the importance of a 0.011 decrease in MPSE.
+
+We first prepared the dataset and selected which variables to include (into our full model with all numeric data).
+
+```{r}
+library(glmnet)
+library(dplyr)
+
+set.seed(139)
+k <- 10
+
+# Convert percent variables into numerics
+percent_vars <- c("FB.", "GB.", "LD.", "HardH.", "SO.", "HR.")
+for (var in percent_vars) {
+  mlb[[var]] <- as.numeric(gsub("%", "", mlb[[var]])) / 100  # Remove '%' and scale
+}
+
+# Exclude Opponent and playoffs from the predictors, only use numeric values
+predictor_vars <- setdiff(names(mlb)[sapply(mlb, is.numeric)], c("Opponent", "playoffs"))
+
+# Prepare dataset for cross-validation
+mlb_cv <- mlb %>%
+  select(all_of(c(predictor_vars, "playoffs"))) %>%
+  mutate(playoffs = as.numeric(as.character(playoffs)),
+         fold = sample(rep(1:k, length.out = nrow(mlb))))
+```
+
+We then trained the Ridge and LASSO regression models and compared their performance. We saw an increased performance from the base model in both models, with LASSO outperforming Ridge regularization.
+
+```{r}
+# Ridge Regression
+mspe_vals_ridge <- numeric(k)
+
+for (i in 1:k) {
+  train_data <- mlb_cv %>% filter(fold != i)
+  test_data <- mlb_cv %>% filter(fold == i)
+  
+  # Prepare X and y for train and test
+  X_train <- as.matrix(scale(train_data %>% select(all_of(predictor_vars))))
+  y_train <- train_data$playoffs
+  X_test <- as.matrix(scale(test_data %>% select(all_of(predictor_vars))))
+  y_test <- test_data$playoffs
+  
+  # Fit Ridge model
+  ridge_model <- glmnet(X_train, y_train, alpha = 0, family = "binomial")
+  
+  # Predict for the test set
+  y_pred <- predict(ridge_model, X_test, s = cv.glmnet(X_train, y_train, alpha = 0, family = "binomial")$lambda.min, type = "response")
+  
+  # Compute MSPE for this fold
+  test_data$mspe <- (y_pred - y_test)^2
+  mspe_vals_ridge[i] <- mean(test_data$mspe)
+}
+
+ridge_mspe <- sqrt(mean(mspe_vals_ridge))
+cat("Ridge Regression MSPE:", ridge_mspe, "\n")
+```
+
+```{r}
+# LASSO Regression
+mspe_vals_lasso <- numeric(k)
+
+for (i in 1:k) {
+  train_data <- mlb_cv %>% filter(fold != i)
+  test_data <- mlb_cv %>% filter(fold == i)
+  
+  # Prepare X and y for train and test
+  X_train <- as.matrix(scale(train_data %>% select(all_of(predictor_vars))))
+  y_train <- train_data$playoffs
+  X_test <- as.matrix(scale(test_data %>% select(all_of(predictor_vars))))
+  y_test <- test_data$playoffs
+  
+  # Fit LASSO model
+  lasso_model <- glmnet(X_train, y_train, alpha = 1, family = "binomial")
+  
+  # Predict for the test set
+  y_pred <- predict(lasso_model, X_test, s = cv.glmnet(X_train, y_train, alpha = 1, family = "binomial")$lambda.min, type = "response")
+  
+  # Compute MSPE for this fold
+  test_data$mspe <- (y_pred - y_test)^2
+  mspe_vals_lasso[i] <- mean(test_data$mspe)
+}
+
+lasso_mspe <- sqrt(mean(mspe_vals_lasso))
+cat("LASSO Regression MSPE:", lasso_mspe, "\n")
+```
+
+We then tried to use more limited models, eliminating some redundancies in the data. We limited the data down to 45 variables, and then trained the same models. The Ridge and LASSO models had an MPSE of 0.304 and 0.291, respectively. These results lead us to a very similar model to the ones obtained with the same regularization techniques. The LASSO model again outperformed the Ridge, and was only 0.001 worse than the model with the full data in prediction!
+
+```{r}
+# Limited models, exclude repetitive / redundant variables, categorical variables
+predictor_vars <- c(
+  # Pitching
+  "PAge", "RA.G", "ERA", "GF", "IP", "H", "R", "ER", "HR", "BB", "IBB", "SO",
+  "HBP", "BK", "WP", "BF", "WHIP", "FIP", "LOB",
+  
+  # Batting
+  "BatAge", "R.G", "PA", "AB_bat", "Runs_bat", "H", "X2B", "X3B", "HR_bat", 
+  "RBI", "SB", "BB_bat", "OPS_bat", "HR_percentage",
+  
+  # Fielding
+  "Rdrs", "DefEff", "E",
+  
+  # Advanced metrics
+  "EV", "HardH.", "LD.", "GB.", "FB.", "WPA", "RE24"
+)
+
+# Prepare dataset for cross-validation
+mlb_cv <- mlb %>%
+  select(all_of(c(predictor_vars, "playoffs"))) %>%
+  mutate(playoffs = as.numeric(as.character(playoffs)),
+         fold = sample(rep(1:k, length.out = nrow(mlb))))
+```
+
+```{r}
+# Ridge Regression
+mspe_vals_ridge <- numeric(k)
+
+for (i in 1:k) {
+  train_data <- mlb_cv %>% filter(fold != i)
+  test_data <- mlb_cv %>% filter(fold == i)
+  
+  # Prepare X and y for train and test
+  X_train <- as.matrix(scale(train_data %>% select(all_of(predictor_vars))))
+  y_train <- train_data$playoffs
+  X_test <- as.matrix(scale(test_data %>% select(all_of(predictor_vars))))
+  y_test <- test_data$playoffs
+  
+  # Fit Ridge model
+  ridge_model <- glmnet(X_train, y_train, alpha = 0, family = "binomial")
+  
+  # Predict for the test set
+  y_pred <- predict(ridge_model, X_test, s = cv.glmnet(X_train, y_train, alpha = 0, family = "binomial")$lambda.min, type = "response")
+  
+  # Compute MSPE for this fold
+  test_data$mspe <- (y_pred - y_test)^2
+  mspe_vals_ridge[i] <- mean(test_data$mspe)
+}
+
+ridge_mspe <- sqrt(mean(mspe_vals_ridge))
+cat("Ridge Regression MSPE:", ridge_mspe, "\n")
+```
+
+```{r}
+# LASSO Regression
+mspe_vals_lasso <- numeric(k)
+
+for (i in 1:k) {
+  train_data <- mlb_cv %>% filter(fold != i)
+  test_data <- mlb_cv %>% filter(fold == i)
+  
+  # Prepare X and y for train and test
+  X_train <- as.matrix(scale(train_data %>% select(all_of(predictor_vars))))
+  y_train <- train_data$playoffs
+  X_test <- as.matrix(scale(test_data %>% select(all_of(predictor_vars))))
+  y_test <- test_data$playoffs
+  
+  # Fit LASSO model
+  lasso_model <- glmnet(X_train, y_train, alpha = 1, family = "binomial")
+  
+  # Predict for the test set
+  y_pred <- predict(lasso_model, X_test, s = cv.glmnet(X_train, y_train, alpha = 1, family = "binomial")$lambda.min, type = "response")
+  
+  # Compute MSPE for this fold
+  test_data$mspe <- (y_pred - y_test)^2
+  mspe_vals_lasso[i] <- mean(test_data$mspe)
+}
+lasso_mspe <- sqrt(mean(mspe_vals_lasso))
+cat("LASSO Regression MSPE:", lasso_mspe, "\n")
+```
+
+A couple of things to consider are team budget and time-fixed effects. Given a team's budget, we can develop an expectation of the caliber of players a team can field. For time fixed effects, we can control for the differences in playoff appearances as a factor of time which would capture the exogenous change in teams earning a spot.
+
+Lastly, we will use principal component analysis to see if we can arrive at more accurate predictions.
+
+```{r}
+k <- 10
+set.seed(139)
+
+# Convert percent variables into numerics
+percent_vars <- c("FB.", "GB.", "LD.", "HardH.", "SO.", "HR.")
+for (var in percent_vars) {
+  mlb[[var]] <- as.numeric(gsub("%", "", mlb[[var]])) / 100  # Remove '%' and scale
+}
+
+# Exclude Opponent and playoffs from the predictors, only use numeric values
+predictor_vars <- setdiff(names(mlb)[sapply(mlb, is.numeric)], c("Opponent", "playoffs"))
+
+# Prepare dataset for cross-validation
+mlb_cv <- mlb %>%
+  select(all_of(c(predictor_vars, "playoffs"))) %>%
+  mutate(playoffs = as.numeric(as.character(playoffs)),
+         fold = sample(rep(1:k, length.out = nrow(mlb))))
+
+# Ridge Regression
+mspe_vals_pca <- numeric(k)
+
+for (i in 1:k) {
+  train_data <- mlb_cv %>% filter(fold != i)
+  test_data <- mlb_cv %>% filter(fold == i)
+  
+  # Prepare X and y for train and test
+  X_train <- as.matrix(scale(train_data %>% select(all_of(predictor_vars))))
+  y_train <- train_data$playoffs
+  X_test <- as.matrix(scale(test_data %>% select(all_of(predictor_vars))))
+  y_test <- test_data$playoffs
+  
+  # Fit PCA model
+  pca_model <- prcomp(X_train, center = TRUE, scale. = TRUE)
+  
+  explained_variance <- cumsum(pca_model$sdev^2 / sum(pca_model$sdev^2))
+  num_components <- which(explained_variance >= 0.95)[1]
+  
+  #Transform data based on num_componenets
+  X_train_pca <- pca_model$x[, 1:num_components]
+  X_test <- scale(test_data %>% select(all_of(predictor_vars)))
+  X_test_pca <- predict(pca_model, newdata = X_test)[, 1:num_components]
+  
+  # Fit a logistic regression model using the principal components
+  pca_glm <- glm(y_train ~ ., data = as.data.frame(cbind(y_train, X_train_pca)), family = "binomial")
+  
+  # Predict for the test set
+  y_pred <- predict(pca_glm, newdata = as.data.frame(X_test_pca), type = "response")
+  
+  # Compute MSPE for this fold
+  test_data$mspe <- (y_pred - test_data$playoffs)^2
+  mspe_vals_pca[i] <- mean(test_data$mspe)
+}
+
+pca_mspe <- sqrt(mean(mspe_vals_pca))
+cat("PCA-based Logistic Regression MSPE:", pca_mspe, "\n")
+```
+
+The reason PCA is not working well here is that the current data we have does not explain enough of the variance with just a select few predictors such that it is hard to remove anyone. The predective power is low to begin with, so we need to add other predictors of interest like budget and time fixed effects.
